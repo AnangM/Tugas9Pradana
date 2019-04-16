@@ -56,16 +56,22 @@ public class Main {
                     System.out.println("Pilih 1 untuk menggunakan metode selection sort");
                     System.out.println("      2 untuk menggunakan metode exchange sort");
                     System.out.println("      3 untuk menggunakan metode buble sort");
+                    System.out.println("      4 untuk menggunakan metode insertion sort");
+                    System.out.println("      5 untuk menggunakan metode shell sort");
                     System.out.print("Pilihan anda --> ");
                     String pilihSort = br.readLine();
-                    if(pilihSort.equals("1")){
+                    if (pilihSort.equals("1")) {
                         selectionSort();
-                    }else if(pilihSort.equals("2")){
+                    } else if (pilihSort.equals("2")) {
                         exchangeSort();
-                    }else if(pilihSort.equals("3")){
+                    } else if (pilihSort.equals("3")) {
                         bubleSort();
+                    } else if (pilihSort.equals("4")) {
+                        insertionSort();
+                    }else if(pilihSort.equals("5")){
+                        shellSort();
                     }
-                break;
+                    break;
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -82,12 +88,12 @@ public class Main {
         System.out.println("++--++---------------++---------------++");
         System.out.println("||No||      Nim      ||      Nama     ||");
         System.out.println("++--++---------------++---------------++");
-        for (int i = 0; i< index;i++) {
+        for (int i = 0; i < index; i++) {
             if (mahasiswa[i] != null) {
-                if(i<10){
-                    System.out.print("||"+(i+1)+" ||");
-                }else{
-                    System.out.print("||"+(i+1)+"||");
+                if (i < 10) {
+                    System.out.print("||" + (i + 1) + " ||");
+                } else {
+                    System.out.print("||" + (i + 1) + "||");
 
                 }
                 System.out.printf("%-15s||", mahasiswa[i].getNim());
@@ -189,30 +195,29 @@ public class Main {
     }
 
     // SORTING
-    //WORKING DO NOT TOUCH!
+    // WORKING DO NOT TOUCH!
     static void selectionSort() {
-        for (int i = 0; i < index -1; i++) {
+        for (int i = 0; i < index - 1; i++) {
             int indexMin = i;
-            for (int j = i + 1; j < index ; j++) {
-                if (mahasiswa[indexMin].getNim()
-                    .compareTo(mahasiswa[j].getNim()) > 0) {
+            for (int j = i + 1; j < index; j++) {
+                if (Long.parseLong(mahasiswa[indexMin].getNim())>Long.parseLong(mahasiswa[j].getNim())) {
                     indexMin = j;
-                    
+
                 }
             }
-            if(indexMin != i){
-                    Mahasiswa temp = mahasiswa[indexMin];
-                    mahasiswa[indexMin] = mahasiswa[i];
-                    mahasiswa[i] = temp;
+            if (indexMin != i) {
+                Mahasiswa temp = mahasiswa[indexMin];
+                mahasiswa[indexMin] = mahasiswa[i];
+                mahasiswa[i] = temp;
             }
         }
     }
-    //WORKING DO NOT TOUCH!
+
+    // WORKING DO NOT TOUCH!
     static void exchangeSort() {
-        for (int i = 0; i < index -1; i++) {
+        for (int i = 0; i < index - 1; i++) {
             for (int j = i + 1; j < index; j++) {
-                if ((mahasiswa[i].getNim()
-                .compareTo(mahasiswa[j].getNim())) > 0) {
+                if ((Long.parseLong(mahasiswa[i].getNim())>Long.parseLong(mahasiswa[j].getNim()))) {
                     Mahasiswa temp = mahasiswa[i];
                     mahasiswa[i] = mahasiswa[j];
                     mahasiswa[j] = temp;
@@ -220,16 +225,45 @@ public class Main {
             }
         }
     }
-    //WORKING DO NOT TOUCH!
-    static void bubleSort(){
-        for(int i =0; i< index -1;i++){
-            for(int j = 0; j< index-i-1;j++){
-                if((mahasiswa[j].getNim()
-                .compareTo(mahasiswa[j+1].getNim()))>0){
+
+    // WORKING DO NOT TOUCH!
+    static void bubleSort() {
+        for (int i = 0; i < index - 1; i++) {
+            for (int j = 0; j < index - i - 1; j++) {
+                if (Long.parseLong(mahasiswa[j].getNim())>Long.parseLong(mahasiswa[j + 1].getNim())) {
                     Mahasiswa temp = mahasiswa[j];
-                    mahasiswa[j] = mahasiswa[j+1];
-                    mahasiswa[j+1] = temp; 
+                    mahasiswa[j] = mahasiswa[j + 1];
+                    mahasiswa[j + 1] = temp;
                 }
+            }
+        }
+    }
+    //WORKING DO NOT TOUCH
+    static void insertionSort() {
+        for (int i = 1; i < index; i++) {
+            Mahasiswa key = mahasiswa[i];
+            int j = i -1;
+            
+            while(j>=0&&(Long.parseLong(mahasiswa[j].getNim())>Long.parseLong(key.getNim()))){
+                mahasiswa[j+1] = mahasiswa[j];
+                j = j - 1;
+            }
+            mahasiswa[j+1] = key;
+
+        }
+    }
+    //WORKING DO NOT TOUCH
+    static void shellSort() {
+        for (int lompat = index/2; lompat > 0;lompat /= 2) {
+            for(int i = lompat; i<index; i++){
+                Mahasiswa temp = mahasiswa[i];
+                int j;
+                for(j = i;j >= lompat && 
+                    (Long.parseLong(mahasiswa[j-lompat].getNim())>Long.parseLong(temp.getNim()))
+                ; j -= lompat){
+                    mahasiswa[j] = mahasiswa[j-lompat];
+                }
+                mahasiswa[j]=temp;
             }
         }
     }
