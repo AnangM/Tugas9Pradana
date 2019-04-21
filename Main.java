@@ -16,13 +16,7 @@ public class Main {
                 menu = Integer.parseInt(br.readLine());
                 switch (menu) {
                 case 1:
-                    String ulang = "y";
-                    while (ulang.equals("y") || ulang.equals("Y")) {
-                        mahasiswa[index] = createMahasiswa();
-                        index++;
-                        System.out.print("Masukkan data lagi? (y/n) ");
-                        ulang = br.readLine();
-                    }
+                    masukkanData();
                     break;
                 case 2:
                     lihatData();
@@ -56,21 +50,23 @@ public class Main {
                     System.out.println("Pilih 1 untuk menggunakan metode selection sort");
                     System.out.println("      2 untuk menggunakan metode exchange sort");
                     System.out.println("      3 untuk menggunakan metode buble sort");
-                    System.out.println("      4 untuk menggunakan metode insertion sort");
-                    System.out.println("      5 untuk menggunakan metode shell sort");
+                    System.out.println("      4 untuk menggunakan metode shell sort");
                     System.out.print("Pilihan anda --> ");
                     String pilihSort = br.readLine();
-                    if (pilihSort.equals("1")) {
-                        selectionSort();
-                    } else if (pilihSort.equals("2")) {
-                        exchangeSort();
-                    } else if (pilihSort.equals("3")) {
-                        bubleSort();
-                    } else if (pilihSort.equals("4")) {
-                        insertionSort();
-                    }else if(pilihSort.equals("5")){
-                        shellSort();
-                    }
+                        switch(pilihSort){
+                            case "1":
+                                selectionSort();
+                                break;
+                            case "2":
+                                exchangeSort();
+                                break;
+                            case "3":
+                                bubleSort();
+                                break;
+                            case"4":
+                                shellSort();
+                                break;
+                        }
                     break;
                 }
             } catch (IOException e) {
@@ -79,15 +75,68 @@ public class Main {
         } while (menu != 7);
     }
 
+    static void masukkanData() {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        try {
+            String ulang = "y";
+            while (ulang.equals("y") || ulang.equals("Y")) {
+                System.out.println("1. Masukkan tanpa sorting");
+                System.out.println("2. Masukkan dengan insertion sort");
+                System.out.print("Pilihan anda -->  ");
+                String metodeMasukan = br.readLine();
+                switch (metodeMasukan) {
+                case "1":
+                    mahasiswa[index] = createMahasiswa();
+                    index++;
+                    break;
+                case "2":
+                    // debug only
+                    // System.out.println("\\n " + index + " \n");
+                    if (mahasiswa.length != 0) {
+                        if (index == 0) {
+                            mahasiswa[index] = createMahasiswa();
+                        } else {
+                            Mahasiswa obj = createMahasiswa();
+                            if (Long.parseLong(obj.getNim()) > Long.parseLong(mahasiswa[index - 1].getNim())) {
+                                mahasiswa[index] = obj;
+                                //Debug only
+                                // System.out.println("First if ran");
+                            } else {
+                                int lokasi = 0;
+                                for (int i = lokasi; i < index; i++) {
+                                    if (Long.parseLong(obj.getNim()) > Long.parseLong(mahasiswa[lokasi].getNim())) {
+                                        lokasi += 1;
+                                    }
+                                }
+                                for (int i = index; i > lokasi; i--) {
+                                    mahasiswa[i] = mahasiswa[i - 1];
+                                }
+                                // Debug only
+                                // System.out.println("Second if ran, with lokasi = " + lokasi);
+                                mahasiswa[lokasi] = obj;
+                            }
+                        }
+                        index++;
+                        break;
+                    }
+                }
+                System.out.print("Masukkan data lagi? (y/n) ");
+                ulang = br.readLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * 
      * @param mhs The array containing data to be shown
      */
     static void lihatData() {
         System.out.println();
-        System.out.println("++--++---------------++---------------++");
-        System.out.println("||No||      Nim      ||      Nama     ||");
-        System.out.println("++--++---------------++---------------++");
+        System.out.println("++--++---------------++------------------------------++");
+        System.out.println("||No||      Nim      ||             Nama             ||");
+        System.out.println("++--++---------------++------------------------------++");
         for (int i = 0; i < index; i++) {
             if (mahasiswa[i] != null) {
                 if (i < 10) {
@@ -97,10 +146,10 @@ public class Main {
 
                 }
                 System.out.printf("%-15s||", mahasiswa[i].getNim());
-                System.out.printf("%-15s||%n", mahasiswa[i].getNama());
+                System.out.printf("%-30s||%n", mahasiswa[i].getNama());
             }
         }
-        System.out.println("++--++---------------++---------------++");
+        System.out.println("++--++---------------++------------------------------++\n\n");
     }
 
     static void ubahData(Integer i) {
@@ -200,7 +249,7 @@ public class Main {
         for (int i = 0; i < index - 1; i++) {
             int indexMin = i;
             for (int j = i + 1; j < index; j++) {
-                if (Long.parseLong(mahasiswa[indexMin].getNim())>Long.parseLong(mahasiswa[j].getNim())) {
+                if (Long.parseLong(mahasiswa[indexMin].getNim()) > Long.parseLong(mahasiswa[j].getNim())) {
                     indexMin = j;
 
                 }
@@ -217,7 +266,7 @@ public class Main {
     static void exchangeSort() {
         for (int i = 0; i < index - 1; i++) {
             for (int j = i + 1; j < index; j++) {
-                if ((Long.parseLong(mahasiswa[i].getNim())>Long.parseLong(mahasiswa[j].getNim()))) {
+                if ((Long.parseLong(mahasiswa[i].getNim()) > Long.parseLong(mahasiswa[j].getNim()))) {
                     Mahasiswa temp = mahasiswa[i];
                     mahasiswa[i] = mahasiswa[j];
                     mahasiswa[j] = temp;
@@ -230,7 +279,7 @@ public class Main {
     static void bubleSort() {
         for (int i = 0; i < index - 1; i++) {
             for (int j = 0; j < index - i - 1; j++) {
-                if (Long.parseLong(mahasiswa[j].getNim())>Long.parseLong(mahasiswa[j + 1].getNim())) {
+                if (Long.parseLong(mahasiswa[j].getNim()) > Long.parseLong(mahasiswa[j + 1].getNim())) {
                     Mahasiswa temp = mahasiswa[j];
                     mahasiswa[j] = mahasiswa[j + 1];
                     mahasiswa[j + 1] = temp;
@@ -238,32 +287,18 @@ public class Main {
             }
         }
     }
-    //WORKING DO NOT TOUCH
-    static void insertionSort() {
-        for (int i = 1; i < index; i++) {
-            Mahasiswa key = mahasiswa[i];
-            int j = i -1;
-            
-            while(j>=0&&(Long.parseLong(mahasiswa[j].getNim())>Long.parseLong(key.getNim()))){
-                mahasiswa[j+1] = mahasiswa[j];
-                j = j - 1;
-            }
-            mahasiswa[j+1] = key;
 
-        }
-    }
-    //WORKING DO NOT TOUCH
+    // WORKING DO NOT TOUCH
     static void shellSort() {
-        for (int lompat = index/2; lompat > 0;lompat /= 2) {
-            for(int i = lompat; i<index; i++){
+        for (int lompat = index / 2; lompat > 0; lompat /= 2) {
+            for (int i = lompat; i < index; i++) {
                 Mahasiswa temp = mahasiswa[i];
                 int j;
-                for(j = i;j >= lompat && 
-                    (Long.parseLong(mahasiswa[j-lompat].getNim())>Long.parseLong(temp.getNim()))
-                ; j -= lompat){
-                    mahasiswa[j] = mahasiswa[j-lompat];
+                for (j = i; j >= lompat && (Long.parseLong(mahasiswa[j - lompat].getNim()) > Long
+                        .parseLong(temp.getNim())); j -= lompat) {
+                    mahasiswa[j] = mahasiswa[j - lompat];
                 }
-                mahasiswa[j]=temp;
+                mahasiswa[j] = temp;
             }
         }
     }
